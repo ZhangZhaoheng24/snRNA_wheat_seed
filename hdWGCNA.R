@@ -108,7 +108,7 @@ head(modules2)
 #               ),simple_anno_size = unit(2, "mm")
 #               ),
 #               #column_split = column_groups,
-#               # cluster_row_slices = TRUE,      # 每个slice内做聚类
+#               # cluster_row_slices = TRUE,      
 #               # clustering_method_rows = "complete",
 #               use_raster = TRUE,
               
