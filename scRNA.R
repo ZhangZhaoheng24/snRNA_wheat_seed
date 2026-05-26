@@ -3,7 +3,6 @@ library(Seurat)
 library(RColorBrewer)
 library(sctransform)
 library(SeuratObject)
-library(harmony)
 #library(presto)
 #options(future.globals.maxSize = 1000 * 1024^10)
 
