@@ -9,9 +9,7 @@ library(harmony)
 set.seed(12345)
 setwd("/home/zhangzh/en_sc")
 remove(scRNA_harmony)
-load("seed_combined_integrated_UcellbulkRNA_ATAC_jisu.RData")
-load(file="seed_hdWGCNA0604seed_4_n.RData")
-remove(sce,scRNA,scRNA_harmony,all)
+load("seed_combined_integrated0331.RData")
 DefaultAssay(object = seed_combined_integrated) <-"RNA"
 
 seurat_obj <- SetupForWGCNA(seed_combined_integrated,
@@ -65,69 +63,69 @@ head(modules)
 head(seurat_obj)
 order=net$dendrograms[[1]]$order
 modules2=modules[order,]
-write.table(modules2,"/home/zhangzh/en_sc/modules_seed_4_n.txt",sep='\t',quote=F)
+write.table(modules2,"modules_seed_4_n.txt",sep='\t',quote=F)
 head(modules2)
-aveexp=read.csv("all_AggregateExpression_c_t.txt",header=T)
-rownames(aveexp)=aveexp$X
-aveexp=aveexp[,-1]
-head(aveexp)
-#aveexp0=log2(aveexp+1)
-aveexp0=t(scale(t(aveexp), center = TRUE, scale = TRUE))
-#head(aveexp0)
-#aveexp2=t(aveexp[modules2$gene_name,])
-aveexp2=t(aveexp0[modules2$gene_name,])
-aveexp3=aveexp2
-#aveexp3=t(scale(t(aveexp2), center = TRUE, scale = TRUE))
-head(aveexp3[1:10,1:10])
-cols=as.data.frame(rownames(aveexp2))
-colnames(cols)="ID"
-library(tidyr)
-cols2 <- cols %>%
-  separate(
-    ID,              
-    into = c("celltype", "Time"),  
-    sep = "_",              
-    remove = FALSE        
-  )
+# aveexp=read.csv("all_AggregateExpression_c_t.txt",header=T)
+# rownames(aveexp)=aveexp$X
+# aveexp=aveexp[,-1]
+# head(aveexp)
+# #aveexp0=log2(aveexp+1)
+# aveexp0=t(scale(t(aveexp), center = TRUE, scale = TRUE))
+# #head(aveexp0)
+# #aveexp2=t(aveexp[modules2$gene_name,])
+# aveexp2=t(aveexp0[modules2$gene_name,])
+# aveexp3=aveexp2
+# #aveexp3=t(scale(t(aveexp2), center = TRUE, scale = TRUE))
+# head(aveexp3[1:10,1:10])
+# cols=as.data.frame(rownames(aveexp2))
+# colnames(cols)="ID"
+# library(tidyr)
+# cols2 <- cols %>%
+#   separate(
+#     ID,              
+#     into = c("celltype", "Time"),  
+#     sep = "_",              
+#     remove = FALSE        
+#   )
 
-head(aveexp2[1:10,1:10])
-library(ComplexHeatmap)
-rownames(cols2)=cols2$ID
-cols2=cols2[order(cols2$Time),]
-cols2=cols2[order(cols2$celltype),]
-aveexp3=aveexp3[cols2$ID,]
-head(aveexp3[1:10,1:10])
-col_fun = circlize::colorRamp2(c(0, 2), c("white", "#FF0504"))
-p1 <- Heatmap(aveexp3, name = "Z-score", 
-              show_row_names = F, show_column_names = F,
-              #row_split=cols2[rownames(aveexp3), c("celltype","Time")],
-              right_annotation = rowAnnotation(df = cols2[,c("celltype","Time"),drop=F],
-              col = list(
-              celltype=c("RNA.AL"="#8A7765","RNA.Central"="#68AEE0","RNA.CF"="#B8D168","RNA.Dividing.cell"="#188645",
-                         "RNA.Embryo"="#EA7368","RNA.ESR"="#DB7FB1","RNA.Pericarp"="#206264","RNA.SC"="#694E83",
-                         "RNA.Scutellum"="#DF9339","RNA.TCSE"="#F4CF5A","RNA.Unknown"="#E5E5E4"),
-              Time=c("Seed4"="#599799","Seed8"="#E99573")
-              ),simple_anno_size = unit(2, "mm")
-              ),
-              #column_split = column_groups,
-              # cluster_row_slices = TRUE,      # 每个slice内做聚类
-              # clustering_method_rows = "complete",
-              use_raster = TRUE,
+# head(aveexp2[1:10,1:10])
+# library(ComplexHeatmap)
+# rownames(cols2)=cols2$ID
+# cols2=cols2[order(cols2$Time),]
+# cols2=cols2[order(cols2$celltype),]
+# aveexp3=aveexp3[cols2$ID,]
+# head(aveexp3[1:10,1:10])
+# col_fun = circlize::colorRamp2(c(0, 2), c("white", "#FF0504"))
+# p1 <- Heatmap(aveexp3, name = "Z-score", 
+#               show_row_names = F, show_column_names = F,
+#               #row_split=cols2[rownames(aveexp3), c("celltype","Time")],
+#               right_annotation = rowAnnotation(df = cols2[,c("celltype","Time"),drop=F],
+#               col = list(
+#               celltype=c("RNA.AL"="#8A7765","RNA.Central"="#68AEE0","RNA.CF"="#B8D168","RNA.Dividing.cell"="#188645",
+#                          "RNA.Embryo"="#EA7368","RNA.ESR"="#DB7FB1","RNA.Pericarp"="#206264","RNA.SC"="#694E83",
+#                          "RNA.Scutellum"="#DF9339","RNA.TCSE"="#F4CF5A","RNA.Unknown"="#E5E5E4"),
+#               Time=c("Seed4"="#599799","Seed8"="#E99573")
+#               ),simple_anno_size = unit(2, "mm")
+#               ),
+#               #column_split = column_groups,
+#               # cluster_row_slices = TRUE,      # 每个slice内做聚类
+#               # clustering_method_rows = "complete",
+#               use_raster = TRUE,
               
-              col = col_fun, 
-              cluster_columns = FALSE, cluster_rows = FALSE,
-              border = FALSE, # border_gp = gpar(col = "black", lwd = 2), #设置热图的边框与粗度
+#               col = col_fun, 
+#               cluster_columns = FALSE, cluster_rows = FALSE,
+#               border = FALSE, # border_gp = gpar(col = "black", lwd = 2),
               
-              column_names_rot = 45,
-              #right_annotation = row_anno,
-              column_title_gp =gpar(fontsize = 3),
-              rect_gp = gpar(col = NA),# 中间线
-              column_names_gp = gpar(fontsize = 14),
-              width = unit(15,'cm'),
-              height =  unit(4,'cm'),gap = unit(0.5,'mm'))
-pdf("heatmap_sc_dram.pdf",width=15,height=5)
-p1
-dev.off()
+#               column_names_rot = 45,
+#               #right_annotation = row_anno,
+#               column_title_gp =gpar(fontsize = 3),
+#               rect_gp = gpar(col = NA),# 中间线
+#               column_names_gp = gpar(fontsize = 14),
+#               width = unit(15,'cm'),
+#               height =  unit(4,'cm'),gap = unit(0.5,'mm'))
+# pdf("heatmap_sc_dram.pdf",width=15,height=5)
+# p1
+# dev.off()
 
 
 PlotDendrogram(seurat_obj, main = 'Seed hdWGCNA Dendrogram')
@@ -199,19 +197,6 @@ p <- DotPlot(
 p
 ggsave("hdWGCNA_hubgene_score_dotplotseed_4_n.pdf",width = 9,height = 4)
 
-# p <- VlnPlot(
-#   seurat_obj,
-#   features = "black",
-#   group.by = "cell_types",
-#   pt.size = 0
-# ) +
-#   geom_boxplot(width = .25, fill = "white") +
-#   xlab("") +
-#   ylab("hME") +
-#   NoLegend()
-# 
-# p
-# save(seurat_obj,file="seed_hdWGCNA0604seed_4_n.RData")
 for (mod in unique(hub_df$module)){
   ModuleNetworkPlot(seurat_obj = seurat_obj,   
                     n_inner = 15,
@@ -221,8 +206,6 @@ for (mod in unique(hub_df$module)){
                     mods = mod,outdir = "ModuleNetworksseed_4_n")
 }
 
-load("seed_hdWGCNA0604seed_4_n.RData")
-
 seurat_obj <- RunModuleUMAP(
   seurat_obj,
   n_hubs = 10, # number of hub genes to include for the UMAP embedding
@@ -231,6 +214,7 @@ seurat_obj <- RunModuleUMAP(
 )
 umap_df <- GetModuleUMAP(seurat_obj)
 write.table(umap_df,"seed_hdWGCNA0604seed_4_n_umap.txt",sep='\t',quote = F)
+save(seurat_obj,file="seed_hdWGCNA0604seed_4_n.RData")
 # plot with ggplot
 ggplot(umap_df, aes(x=UMAP1, y=UMAP2)) +
   geom_point(
@@ -242,7 +226,7 @@ ggsave("hdWGCNA_UMAP_networkSeed_4_n10.pdf",width = 8,height = 7)
 options(future.globals.maxSize = 50442450944) 
 
 head(umap_df)
-pdf("hdWGCNA_UMAP_network2_Seed_4_n10_1218.pdf",width = 6,height = 15)
+pdf("hdWGCNA_UMAP_network_Seed_4_n10.pdf",width = 6,height = 15)
 ModuleUMAPPlot(
   seurat_obj,
   edge.alpha=0.25,
@@ -258,7 +242,7 @@ ModuleUMAPPlot(
 dev.off()
 
 
-pdf("hdWGCNA_hub_network2Seed_4_n.pdf",width = 8,height = 7)
+pdf("hdWGCNA_hub_network_Seed_4_n.pdf",width = 8,height = 7)
 HubGeneNetworkPlot(
   seurat_obj,
   n_hubs = 5,       # 
